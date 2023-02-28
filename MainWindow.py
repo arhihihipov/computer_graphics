@@ -33,8 +33,7 @@ class MainWindow(QMainWindow):
             "GL_TRIANGLE_FAN": [gl.GL_TRIANGLE_FAN, 3],
             "GL_QUADS": [gl.GL_QUADS, 4],
             "GL_QUAD_STRIP": [gl.GL_QUAD_STRIP, 4],
-            "GL_POLYGON": [gl.GL_POLYGON, 1],
-            "CIRCLES": ["CIRCLES"]
+            "GL_POLYGON": [gl.GL_POLYGON, 1]
         }
         self.dictionary = {count: elem for count, elem in enumerate(self.functions.keys())}
 
