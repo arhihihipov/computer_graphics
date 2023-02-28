@@ -6,68 +6,44 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>957</width>
-    <height>671</height>
+    <width>1017</width>
+    <height>700</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>lab1_Arkhipov</string>
+   <string>lab2_Arkhipov</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QPushButton" name="pushButton">
-    <property name="geometry">
-     <rect>
-      <x>840</x>
-      <y>620</y>
-      <width>93</width>
-      <height>28</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <family>Jura</family>
-      <pointsize>12</pointsize>
-     </font>
-    </property>
-    <property name="text">
-     <string>Выход</string>
-    </property>
-   </widget>
    <widget class="QGroupBox" name="groupBox">
     <property name="geometry">
      <rect>
-      <x>650</x>
-      <y>50</y>
-      <width>281</width>
-      <height>501</height>
+      <x>670</x>
+      <y>20</y>
+      <width>221</width>
+      <height>91</height>
      </rect>
     </property>
-    <property name="font">
-     <font>
-      <family>Jura</family>
-      <pointsize>10</pointsize>
-     </font>
-    </property>
     <property name="title">
-     <string>Настройки</string>
+     <string/>
     </property>
     <widget class="QComboBox" name="comboBox">
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>30</y>
-       <width>171</width>
-       <height>41</height>
+       <y>40</y>
+       <width>191</width>
+       <height>31</height>
       </rect>
      </property>
      <property name="font">
       <font>
+       <family>Jura</family>
        <pointsize>12</pointsize>
       </font>
      </property>
      <item>
       <property name="text">
-       <string>GL_POINT</string>
+       <string>GL_POINTS</string>
       </property>
      </item>
      <item>
@@ -115,136 +91,346 @@
        <string>GL_POLYGON</string>
       </property>
      </item>
+     <item>
+      <property name="text">
+       <string>CIRCLES</string>
+      </property>
+     </item>
     </widget>
-    <widget class="QPushButton" name="pushButton_2">
+    <widget class="QLabel" name="label">
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>110</y>
-       <width>151</width>
-       <height>31</height>
+       <y>10</y>
+       <width>181</width>
+       <height>16</height>
       </rect>
      </property>
      <property name="font">
       <font>
+       <family>Jura</family>
        <pointsize>12</pointsize>
       </font>
      </property>
      <property name="text">
-      <string>Изобразить</string>
+      <string>Выберите примитив</string>
      </property>
     </widget>
-    <widget class="QSlider" name="horizontalSlider">
+   </widget>
+   <widget class="QGroupBox" name="groupBox_2">
+    <property name="geometry">
+     <rect>
+      <x>670</x>
+      <y>130</y>
+      <width>311</width>
+      <height>81</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Jura</family>
+      <pointsize>12</pointsize>
+     </font>
+    </property>
+    <property name="title">
+     <string>Тест отсечения</string>
+    </property>
+    <widget class="QCheckBox" name="checkBox">
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>200</y>
-       <width>160</width>
-       <height>22</height>
+       <y>40</y>
+       <width>181</width>
+       <height>20</height>
       </rect>
      </property>
-     <property name="minimum">
-      <number>1</number>
-     </property>
-     <property name="maximum">
-      <number>15</number>
-     </property>
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
+     <property name="text">
+      <string>Активировать</string>
      </property>
     </widget>
-    <widget class="QSlider" name="horizontalSlider_2">
+   </widget>
+   <widget class="QGroupBox" name="groupBox_3">
+    <property name="geometry">
+     <rect>
+      <x>670</x>
+      <y>240</y>
+      <width>311</width>
+      <height>151</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Jura</family>
+      <pointsize>12</pointsize>
+     </font>
+    </property>
+    <property name="title">
+     <string>Тест прозрачности</string>
+    </property>
+    <widget class="QComboBox" name="comboBox_2">
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>290</y>
-       <width>160</width>
-       <height>22</height>
+       <y>70</y>
+       <width>191</width>
+       <height>31</height>
       </rect>
      </property>
-     <property name="minimum">
-      <number>1</number>
-     </property>
-     <property name="maximum">
-      <number>15</number>
-     </property>
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
-     </property>
+     <item>
+      <property name="text">
+       <string>GL_NEVER</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>GL_LESS</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>GL_EQUAL</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>GL_LEQUAL</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>GL_GREATER</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>GL_NOTEQUAL</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>GL_GEQUAL</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>GL_ALWAYS</string>
+      </property>
+     </item>
     </widget>
     <widget class="QSlider" name="horizontalSlider_3">
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>370</y>
-       <width>160</width>
+       <y>110</y>
+       <width>291</width>
        <height>22</height>
       </rect>
      </property>
-     <property name="minimum">
-      <number>1</number>
-     </property>
      <property name="maximum">
-      <number>20</number>
+      <number>100</number>
+     </property>
+     <property name="singleStep">
+      <number>10</number>
      </property>
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
      </property>
     </widget>
-    <widget class="QLabel" name="label_2">
+    <widget class="QCheckBox" name="checkBox_2">
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>170</y>
-       <width>221</width>
-       <height>16</height>
+       <y>30</y>
+       <width>181</width>
+       <height>20</height>
       </rect>
      </property>
-     <property name="font">
-      <font>
-       <pointsize>12</pointsize>
-      </font>
-     </property>
      <property name="text">
-      <string>Выберите размер точки</string>
+      <string>Активировать</string>
      </property>
     </widget>
-    <widget class="QLabel" name="label_3">
-     <property name="geometry">
-      <rect>
-       <x>10</x>
-       <y>260</y>
-       <width>221</width>
-       <height>16</height>
-      </rect>
-     </property>
-     <property name="font">
-      <font>
-       <pointsize>12</pointsize>
-      </font>
-     </property>
-     <property name="text">
-      <string>Выберите толщину линии</string>
-     </property>
-    </widget>
+   </widget>
+   <widget class="QGroupBox" name="groupBox_4">
+    <property name="geometry">
+     <rect>
+      <x>670</x>
+      <y>420</y>
+      <width>291</width>
+      <height>211</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Jura</family>
+      <pointsize>12</pointsize>
+     </font>
+    </property>
+    <property name="title">
+     <string>Тест смешения цветов</string>
+    </property>
     <widget class="QLabel" name="label_4">
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>340</y>
-       <width>261</width>
+       <y>80</y>
+       <width>55</width>
        <height>16</height>
       </rect>
      </property>
-     <property name="font">
-      <font>
-       <pointsize>12</pointsize>
-      </font>
-     </property>
      <property name="text">
-      <string>Выберите количество объектов</string>
+      <string>sfactor</string>
      </property>
     </widget>
+    <widget class="QLabel" name="label_5">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>150</y>
+       <width>55</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>dfactor</string>
+     </property>
+    </widget>
+    <widget class="QComboBox" name="comboBox_3">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>170</y>
+       <width>261</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <item>
+      <property name="text">
+       <string>GL_ZERO</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>GL_ONE</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>GL_SRC_COLOR</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>GL_ONE_MINUS_SRC_COLOR</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>GL_SRC_ALPHA</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>GL_ONE_MINUS_SRC_ALPHA</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>GL_DST_ALPHA</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>GL_ONE_MINUS_DST_ALPHA</string>
+      </property>
+     </item>
+    </widget>
+    <widget class="QComboBox" name="comboBox_4">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>100</y>
+       <width>261</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <item>
+      <property name="text">
+       <string>GL_ZERO</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>GL_ONE</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>GL_DST_COLOR</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>GL_ONE_MINUS_DST_COLOR</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>GL_SRC_ALPHA</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>GL_ONE_MINUS_SRC_ALPHA</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>GL_DST_ALPHA</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>GL_ONE_MINUS_DST_ALPHA </string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>GL_SRC_ALPHA_SATURATE</string>
+      </property>
+     </item>
+    </widget>
+    <widget class="QCheckBox" name="checkBox_3">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>40</y>
+       <width>181</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Активировать</string>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QPushButton" name="pushButton">
+    <property name="geometry">
+     <rect>
+      <x>890</x>
+      <y>650</y>
+      <width>93</width>
+      <height>28</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Jura</family>
+      <pointsize>12</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>Выход</string>
+    </property>
    </widget>
    <widget class="QOpenGLWidget" name="openGLWidget">
     <property name="geometry">
@@ -254,6 +440,12 @@
       <width>600</width>
       <height>600</height>
      </rect>
+    </property>
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
     </property>
    </widget>
   </widget>
