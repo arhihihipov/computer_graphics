@@ -89,6 +89,7 @@ class MainWindow(QMainWindow):
         # Демонстрация окна
         self.show()
 
+    # Выход из приложения
     def quit(self):
         sys.exit()
 
