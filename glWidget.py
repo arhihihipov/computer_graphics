@@ -1,22 +1,25 @@
 from PyQt6.QtOpenGLWidgets import QOpenGLWidget
 from OpenGL import GL as gl
 from PyQt6 import QtCore
-from random import uniform
+from geometry import median_dots, bisectors_intersection_dot, divide_cutoff
+
 
 class glWidget(QOpenGLWidget):
     def __init__(self, main_window):
         super().__init__(parent=main_window.ui.centralwidget)
-        # Примитив, который будет нарисован
-        self.primitive = None
-        # Минимальное количество точек, которое может быть в примитиве
-        self.minPoints = None
-        # Флаг, содержащий информацию о том, нужно ли вычислять точки заново
-        self.makeNewPoints = False
         # Ссылка на родительское окно
         self.mw = main_window
+        # Массив точек, которые мы будем соединять
+        self.points = []
+        # Старые треугольники
+        self.old_triangles = []
+        # Новые треугольники
+        self.new_triangles = []
+        # начальный треугольник
+        self.start = [[-1, 2 / 3 ** (1 / 2) - 1 + 0.5], [-1, -1 + 0.5], [1, -1 + 0.5]]
 
         main_window.ui.openGLWidget = self
-        main_window.ui.openGLWidget.setGeometry(QtCore.QRect(20, 50, 600, 600))
+        main_window.ui.openGLWidget.setGeometry(QtCore.QRect(10, 10, 600, 600))
         main_window.ui.openGLWidget.setObjectName("openGLWidget")
 
     # Настройка состояния. Вызывается один раз в самом начале
@@ -25,33 +28,47 @@ class glWidget(QOpenGLWidget):
         gl.glClear(gl.GL_COLOR_BUFFER_BIT | gl.GL_DEPTH_BUFFER_BIT)
 
     def paintGL(self):
-        if self.primitive != None:
-            # Генерация новых точек, если это необходимо
-            if self.makeNewPoints:
-                objectsCounter = self.mw.ui.horizontalSlider_3.value()
-                self.points = [[uniform(-0.99,0.99), uniform(-0.99, 0.99)] for _ in range(objectsCounter * self.minPoints)]
+        self.points = []
+        self.old_triangles = []
+        self.new_triangles = []
 
-                # Обрезание массива точек
-                if self.primitive in [gl.GL_LINE_STRIP, gl.GL_LINE_LOOP]:
-                    self.points = self.points[:objectsCounter + 1]
-                elif self.primitive in [gl.GL_TRIANGLE_STRIP, gl.GL_TRIANGLE_FAN]:
-                    self.points = self.points[:objectsCounter + 2]
-                elif self.primitive in [gl.GL_QUAD_STRIP]:
-                    self.points = self.points[: 2 * (objectsCounter + 1)]
+        self.draw_fractal(self.start, self.mw.ui.horizontalSlider.value())
 
-                # Генерация цветов точек
-                self.colors = [[uniform(0, 1) for i in range(3)] for _ in range(len(self.points))]
-
-            # Установка размера точки
-            gl.glPointSize(self.mw.ui.horizontalSlider.value())
-            # Установка толщины линии
-            gl.glLineWidth(self.mw.ui.horizontalSlider_2.value())
-
-            # Рисование
-            gl.glBegin(self.primitive)
-            for index, point in enumerate(self.points):
-                if index % self.minPoints == 0:
-                    gl.glColor3fv(self.colors[index])
+        gl.glLineWidth(1)
+        # Рисование треугольников
+        gl.glBegin(gl.GL_LINE_STRIP)
+        gl.glColor3f(0.00, 0.5, 1)
+        for triangle in self.old_triangles:
+            for point in triangle:
                 gl.glVertex2fv(point)
-            gl.glEnd()
+        for point in self.start:
+            gl.glVertex2fv(point)
+        gl.glEnd()
 
+        gl.glLineWidth(3)
+        # Рисование точек
+        gl.glColor3f(1, 1, 1)
+        gl.glBegin(gl.GL_LINE_STRIP)
+        for point in self.points:
+            gl.glVertex2fv(point)
+        gl.glEnd()
+
+    def count_triangles(self, dots):
+        return [
+            [divide_cutoff(dots[1], dots[2]), dots[1], dots[0]],
+            [divide_cutoff(dots[1], dots[2]), median_dots([dots[0], dots[2]]), dots[0]],
+            [divide_cutoff(dots[1], dots[2]), median_dots([dots[0], dots[2]]), dots[2]]
+        ]
+
+    def draw_fractal(self, dots, iterator):
+        self.old_triangles.append(dots)
+        for _ in range(iterator):
+            for index,triangle in enumerate(self.old_triangles):
+                res = self.count_triangles(triangle)
+                if index % 2 != 0:
+                    res.reverse()
+                self.new_triangles += res
+            self.old_triangles = self.new_triangles
+            self.new_triangles = []
+        for triangle in self.old_triangles:
+            self.points.append(bisectors_intersection_dot(triangle))
