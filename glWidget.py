@@ -1,57 +1,73 @@
 from PyQt6.QtOpenGLWidgets import QOpenGLWidget
 from OpenGL import GL as gl
+from OpenGL.GL.shaders import compileShader, compileProgram
 from PyQt6 import QtCore
-from random import uniform
+
+# Функция для чтения содержимого файла
+def read_file(file_name, descriptor='r'):
+    file = open(file_name, descriptor)
+    content = file.read()
+    return content
 
 class glWidget(QOpenGLWidget):
     def __init__(self, main_window):
         super().__init__(parent=main_window.ui.centralwidget)
-        # Примитив, который будет нарисован
-        self.primitive = None
-        # Минимальное количество точек, которое может быть в примитиве
-        self.minPoints = None
-        # Флаг, содержащий информацию о том, нужно ли вычислять точки заново
-        self.makeNewPoints = False
         # Ссылка на родительское окно
         self.mw = main_window
 
+        self.vertex = [[-1, -1],[1, -1],[0, 1]]
+
+        self.demo = 2
+
+        if self.demo == 1:
+            self.colors = [[1, 0, 0],[0, 1, 0],[0, 0, 1]]
+        elif self.demo == 2:
+            self.colors = [[x / 255 for x in [176, 201, 230]], [x / 255 for x in [250, 128, 114]],
+                           [x / 255 for x in [245, 255, 250]]]
+        elif self.demo == 3:
+            self.colors = [[x / 255 for x in [187, 38, 73]], [x / 255 for x in [128, 0, 0]],
+                           [x / 255 for x in [220, 20, 60]]]
+        else:
+            self.colors = [[1, 0, 0], [1, 0, 0], [0, 0, 0]]
+
         main_window.ui.openGLWidget = self
-        main_window.ui.openGLWidget.setGeometry(QtCore.QRect(20, 50, 600, 600))
+        main_window.ui.openGLWidget.setGeometry(QtCore.QRect(10, 10, 600, 600))
         main_window.ui.openGLWidget.setObjectName("openGLWidget")
+
 
     # Настройка состояния. Вызывается один раз в самом начале
     def initializeGL(self):
-        gl.glClearColor(0, 0, 0, 1)
+        gl.glClearColor(1, 1, 1, 1)
         gl.glClear(gl.GL_COLOR_BUFFER_BIT | gl.GL_DEPTH_BUFFER_BIT)
 
+        self.shader = compileProgram(compileShader(read_file('fragment_shader.frag'), gl.GL_FRAGMENT_SHADER))
+
+        vertex_a = gl.glGetUniformLocation(self.shader, 'A')
+        vertex_b = gl.glGetUniformLocation(self.shader, 'B')
+        vertex_c = gl.glGetUniformLocation(self.shader, 'C')
+
+        vertex_a_color = gl.glGetUniformLocation(self.shader, 'A_color')
+        vertex_b_color = gl.glGetUniformLocation(self.shader, 'B_color')
+        vertex_c_color = gl.glGetUniformLocation(self.shader, 'C_color')
+
+
+
+
+        gl.glUseProgram(self.shader)
+
+
+        gl.glUniform2f(vertex_a, *self.vertex[0])
+        gl.glUniform2f(vertex_b, *self.vertex[1])
+        gl.glUniform2f(vertex_c, *self.vertex[2])
+        gl.glUniform3f(vertex_a_color, *self.colors[0])
+        gl.glUniform3f(vertex_b_color, *self.colors[1])
+        gl.glUniform3f(vertex_c_color, *self.colors[2])
+
+
     def paintGL(self):
-        if self.primitive != None:
-            # Генерация новых точек, если это необходимо
-            if self.makeNewPoints:
-                objectsCounter = self.mw.ui.horizontalSlider_3.value()
-                self.points = [[uniform(-0.99,0.99), uniform(-0.99, 0.99)] for _ in range(objectsCounter * self.minPoints)]
-
-                # Обрезание массива точек
-                if self.primitive in [gl.GL_LINE_STRIP, gl.GL_LINE_LOOP]:
-                    self.points = self.points[:objectsCounter + 1]
-                elif self.primitive in [gl.GL_TRIANGLE_STRIP, gl.GL_TRIANGLE_FAN]:
-                    self.points = self.points[:objectsCounter + 2]
-                elif self.primitive in [gl.GL_QUAD_STRIP]:
-                    self.points = self.points[: 2 * (objectsCounter + 1)]
-
-                # Генерация цветов точек
-                self.colors = [[uniform(0, 1) for i in range(3)] for _ in range(len(self.points))]
-
-            # Установка размера точки
-            gl.glPointSize(self.mw.ui.horizontalSlider.value())
-            # Установка толщины линии
-            gl.glLineWidth(self.mw.ui.horizontalSlider_2.value())
-
-            # Рисование
-            gl.glBegin(self.primitive)
-            for index, point in enumerate(self.points):
-                if index % self.minPoints == 0:
-                    gl.glColor3fv(self.colors[index])
-                gl.glVertex2fv(point)
-            gl.glEnd()
-
+        gl.glPointSize(5)
+        gl.glBegin(gl.GL_TRIANGLES)
+        for i in range(3):
+            gl.glColor3fv(self.colors[i])
+            gl.glVertex2fv(self.vertex[i])
+        gl.glEnd()
