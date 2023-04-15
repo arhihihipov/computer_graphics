@@ -1,57 +1,65 @@
 from PyQt6.QtOpenGLWidgets import QOpenGLWidget
 from OpenGL import GL as gl
 from PyQt6 import QtCore
-from random import uniform
+from interpolation import kochanek_bartels_spline
 
 class glWidget(QOpenGLWidget):
     def __init__(self, main_window):
         super().__init__(parent=main_window.ui.centralwidget)
-        # Примитив, который будет нарисован
-        self.primitive = None
-        # Минимальное количество точек, которое может быть в примитиве
-        self.minPoints = None
-        # Флаг, содержащий информацию о том, нужно ли вычислять точки заново
-        self.makeNewPoints = False
+        # Список, отмеченных пользователем точек
+        self.points = []
+
+        main_window.ui.openGLWidget = self
+        main_window.ui.openGLWidget.setGeometry(QtCore.QRect(10, 10, 640, 640))
+        main_window.ui.openGLWidget.setObjectName("openGLWidget")
         # Ссылка на родительское окно
         self.mw = main_window
 
-        main_window.ui.openGLWidget = self
-        main_window.ui.openGLWidget.setGeometry(QtCore.QRect(20, 50, 600, 600))
-        main_window.ui.openGLWidget.setObjectName("openGLWidget")
-
-    # Настройка состояния. Вызывается один раз в самом начале
+    # Настройка состояния. Вызывается перед каждым обновлением кадра
     def initializeGL(self):
-        gl.glClearColor(0, 0, 0, 1)
+        gl.glClearColor(1,1,1,1)
+        gl.glMatrixMode(gl.GL_PROJECTION)
         gl.glClear(gl.GL_COLOR_BUFFER_BIT | gl.GL_DEPTH_BUFFER_BIT)
 
     def paintGL(self):
-        if self.primitive != None:
-            # Генерация новых точек, если это необходимо
-            if self.makeNewPoints:
-                objectsCounter = self.mw.ui.horizontalSlider_3.value()
-                self.points = [[uniform(-0.99,0.99), uniform(-0.99, 0.99)] for _ in range(objectsCounter * self.minPoints)]
+        gl.glColor3f(1, 0, 0)
+        gl.glPointSize(4)
+        gl.glBegin(gl.GL_POINTS)
+        if not self.points:
+            gl.glColor3f(1,1,1)
+            gl.glVertex2f(0,0)
+        gl.glColor3f(0,0,0)
+        for point in self.points:
+            gl.glVertex2fv(point)
+        gl.glEnd()
 
-                # Обрезание массива точек
-                if self.primitive in [gl.GL_LINE_STRIP, gl.GL_LINE_LOOP]:
-                    self.points = self.points[:objectsCounter + 1]
-                elif self.primitive in [gl.GL_TRIANGLE_STRIP, gl.GL_TRIANGLE_FAN]:
-                    self.points = self.points[:objectsCounter + 2]
-                elif self.primitive in [gl.GL_QUAD_STRIP]:
-                    self.points = self.points[: 2 * (objectsCounter + 1)]
+        if len(self.points) >=  4:
+            gl.glColor3f(1.00,0.41,0.71)
+            gl.glPointSize(2)
+            gl.glLineWidth(2)
+            gl.glBegin(gl.GL_LINE_STRIP)
 
-                # Генерация цветов точек
-                self.colors = [[uniform(0, 1) for i in range(3)] for _ in range(len(self.points))]
-
-            # Установка размера точки
-            gl.glPointSize(self.mw.ui.horizontalSlider.value())
-            # Установка толщины линии
-            gl.glLineWidth(self.mw.ui.horizontalSlider_2.value())
-
-            # Рисование
-            gl.glBegin(self.primitive)
-            for index, point in enumerate(self.points):
-                if index % self.minPoints == 0:
-                    gl.glColor3fv(self.colors[index])
+            for point in kochanek_bartels_spline(self.points, self.mw.ui.tSlider.value()/100,
+                                                 self.mw.ui.bSlider.value()/100, self.mw.ui.cSlider.value()/100):
                 gl.glVertex2fv(point)
             gl.glEnd()
 
+    # Клик мышки создаёт в этом месте точку
+    def mousePressEvent(self, event):
+        origin = event.pos()
+        x = origin.x()
+        y = origin.y()
+
+        if x < 320:
+            x = -(320 - x)/320
+        else:
+            x = (x - 320)/320
+
+        if y < 320:
+            y = (320 - y)/320
+        else:
+            y = -(y - 320) / 320
+
+        point = [x, y]
+        self.points.append(point)
+        self.update()
